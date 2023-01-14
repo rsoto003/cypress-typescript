@@ -12,24 +12,22 @@ describe('example to-do app', () => {
     let testTodos = [
         "Pay electric bill",
         "Walk the dog",
-        "Feed the cat"
     ]
     beforeEach(() => {
         cy.visit('https://example.cypress.io/todo')
     })
 
     it('displays two todo items by default', () => {
-        cy.get('.todo-list li').should('have.length', 2)
-
-        cy.get('.todo-list li').first().should('have.text', 'Pay electric bill')
-        cy.get('.todo-list li').last().should('have.text', 'Walk the dog')
+        assertNumberOfTodos(2);
+        assertTodoText(testTodos);
     })
 
     it('can add new todo items', () => {
         const newItem = 'Feed the cat'
+        testTodos.push(newItem);
         addTodo(newItem);
         assertNumberOfTodos(3);
-        assertTodoText(testTodos)
+        assertTodoText(testTodos);
     })
 
     it('can check off an item as completed', () => {
