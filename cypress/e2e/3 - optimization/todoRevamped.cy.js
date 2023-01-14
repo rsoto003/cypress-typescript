@@ -1,6 +1,19 @@
 /// <reference types="cypress" />
 describe('example to-do app', () => {
-    let todos = ["Take Rocky out to go potty", "Give Rocky his lunch", "Give Rocky his medicine", ]
+    let todos = [
+        "Take Rocky out to go potty", 
+        "Give Rocky his lunch", 
+        "Give Rocky his medicine",
+        "Eat lunch @ 12:30 PM",
+        "Apply to 5 jobs after lunch",
+        "Take rocky out for afternoon walk"
+    ]
+
+    let testTodos = [
+        "Pay electric bill",
+        "Walk the dog",
+        "Feed the cat"
+    ]
     beforeEach(() => {
         cy.visit('https://example.cypress.io/todo')
     })
@@ -14,14 +27,9 @@ describe('example to-do app', () => {
 
     it('can add new todo items', () => {
         const newItem = 'Feed the cat'
-        // cy.get('[data-test=new-todo]').type(`${newItem}{enter}`)
         addTodo(newItem);
-        cy.pause();
-
-        cy.get('.todo-list li')
-        .should('have.length', 3)
-        .last()
-        .should('have.text', newItem)
+        assertNumberOfTodos(3);
+        assertTodoText(testTodos)
     })
 
     it('can check off an item as completed', () => {
@@ -97,6 +105,13 @@ function addTodo(todo){
 }
 
 //asserting number of todos
-function assertNumberOfTodos(num, todoText){
-  cy.get('.todo-list li').should('have.length', num);
+const assertNumberOfTodos = num => {
+    cy.get('.todo-list li').should('have.length', num);
+}
+
+//assert todo text
+function assertTodoText(todoText){
+  for(let i = 0; i < todoText.length; i++){
+    cy.get('.todo-list li').eq(i).should("have.text", todoText[i])
+  }
 }
