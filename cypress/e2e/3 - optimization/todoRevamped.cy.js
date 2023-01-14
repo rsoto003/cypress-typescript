@@ -31,14 +31,7 @@ describe('example to-do app', () => {
     })
 
     it('can check off an item as completed', () => {
-        cy.contains('Pay electric bill')
-        .parent()
-        .find('input[type=checkbox]')
-        .check()
-
-        cy.contains('Pay electric bill')
-        .parents('li')
-        .should('have.class', 'completed')
+        clickTodoCheckbox('Pay electric bill', true)
     })
 
     context('with a checked task', () => {
@@ -113,3 +106,10 @@ function assertTodoText(todoText){
     cy.get('.todo-list li').eq(i).should("have.text", todoText[i])
   }
 }
+
+//check todo (can be used to check or uncheck todo)
+const clickTodoCheckbox = (todoText, checkboxBool) => {
+    cy.contains(todoText).parent().find('input[type=checkbox]').check();
+    cy.contains(todoText).parents('li').should(checkboxBool ? 'have.class' : 'not.have.class', 'completed');
+}
+
