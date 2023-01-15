@@ -95,12 +95,12 @@ describe('example to-do app', () => {
 
 //adding todos 
 function addTodo(todos){
-    if(typeof(todos) === 'array'){
+    if(Array.isArray(todos)){
         for(let i = 0; i < todos.length; i++){
-            cy.getDataTag("new-todo").type(`${todos[i]}{enter}`)
+            cy.getDataTag("new-todo").type(`${todos[i]}{enter}`);
         }   
     } else {
-        cy.getDataTag("new-todo").type(`${todos}{enter}`)
+        cy.getDataTag("new-todo").type(`${todos}{enter}`);
     }
 
 }
