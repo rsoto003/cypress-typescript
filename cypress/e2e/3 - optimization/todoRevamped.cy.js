@@ -24,54 +24,57 @@ describe('example to-do app', () => {
 
     it('can add new todo items', () => {
         const newItem = 'Feed the cat'
-        testTodos.push(newItem);
         addTodo(newItem);
         assertNumberOfTodos(3);
         assertTodoText(testTodos);
     })
 
     it('can check off an item as completed', () => {
-        clickTodoCheckbox('Pay electric bill', true)
+        clickTodoCheckbox('Pay electric bill', true);
     })
 
     context('with a checked task', () => {
         beforeEach(() => {
-        cy.contains('Pay electric bill')
-            .parent()
-            .find('input[type=checkbox]')
-            .check()
+            clickTodoCheckbox('Pay electric bill', true);
         })
 
         it('can filter for uncompleted tasks', () => {
-        cy.contains('Active').click()
+            cy.contains('Active').click()
 
-        cy.get('.todo-list li')
-            .should('have.length', 1)
-            .first()
-            .should('have.text', 'Walk the dog')
+            cy.get('.todo-list li')
+                .should('have.length', 1)
+                .first()
+                .should('have.text', 'Walk the dog')
 
-        cy.contains('Pay electric bill').should('not.exist')
+            cy.contains('Pay electric bill').should('not.exist')
         })
 
         it('can filter for completed tasks', () => {
-        cy.contains('Completed').click()
+            cy.contains('Completed').click()
 
-        cy.get('.todo-list li')
-            .should('have.length', 1)
-            .first()
-            .should('have.text', 'Pay electric bill')
+            cy.get('.todo-list li')
+                .should('have.length', 1)
+                .first()
+                .should('have.text', 'Pay electric bill')
 
-        cy.contains('Walk the dog').should('not.exist')
+            cy.contains('Walk the dog').should('not.exist')
         })
 
         it('can delete all completed tasks', () => {
-        cy.contains('Clear completed').click()
+            cy.contains('Clear completed').click()
 
-        cy.get('.todo-list li')
-            .should('have.length', 1)
-            .should('not.have.text', 'Pay electric bill')
+            cy.get('.todo-list li')
+                .should('have.length', 1)
+                .should('not.have.text', 'Pay electric bill')
 
-        cy.contains('Clear completed').should('not.exist')
+            cy.contains('Clear completed').should('not.exist')
+        })
+    })
+
+    context('brand new list of todos', () => {
+        it('test', () => {
+            addTodo(todos);
+            cy.pause();
         })
     })
 })
@@ -91,8 +94,15 @@ describe('example to-do app', () => {
 */
 
 //adding todos 
-function addTodo(todo){
-  cy.getDataTag("new-todo").type(`${todo}{enter}`)
+function addTodo(todos){
+    if(typeof(todos) === 'array'){
+        for(let i = 0; i < todos.length; i++){
+            cy.getDataTag("new-todo").type(`${todos[i]}{enter}`)
+        }   
+    } else {
+        cy.getDataTag("new-todo").type(`${todos}{enter}`)
+    }
+
 }
 
 //asserting number of todos
@@ -112,4 +122,3 @@ const clickTodoCheckbox = (todoText, checkboxBool) => {
     cy.contains(todoText).parent().find('input[type=checkbox]').check();
     cy.contains(todoText).parents('li').should(checkboxBool ? 'have.class' : 'not.have.class', 'completed');
 }
-
