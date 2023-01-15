@@ -19,14 +19,14 @@ describe('example to-do app', () => {
 
     it('displays two todo items by default', () => {
         assertNumberOfTodos(2);
-        assertTodoText(testTodos);
+        assertTodosText(testTodos);
     })
 
     it('can add new todo items', () => {
         const newItem = 'Feed the cat'
         addTodo(newItem);
         assertNumberOfTodos(3);
-        assertTodoText(testTodos);
+        assertTodosText(testTodos);
     })
 
     it('can check off an item as completed', () => {
@@ -39,18 +39,21 @@ describe('example to-do app', () => {
         })
 
         it('can filter for uncompleted tasks', () => {
-            cy.contains('Active').click()
+            filterTodos('Active');
 
-            cy.get('.todo-list li')
-                .should('have.length', 1)
-                .first()
-                .should('have.text', 'Walk the dog')
+            // cy.get('.todo-list li')
+            //     .should('have.length', 1)
+            //     .first()
+            //     .should('have.text', 'Walk the dog')
 
-            cy.contains('Pay electric bill').should('not.exist')
+            assertSingleTodoText('Walk the dog')
+            assertNumberOfTodos(1)
+            // cy.contains('Pay electric bill').should('not.exist')
+            assertSingleTodoText('Pay electric bill', false)
         })
 
         it('can filter for completed tasks', () => {
-            cy.contains('Completed').click()
+            filterTodos('Completed');
 
             cy.get('.todo-list li')
                 .should('have.length', 1)
@@ -72,10 +75,23 @@ describe('example to-do app', () => {
     })
 
     context('brand new list of todos', () => {
-        it('test', () => {
-            addTodo(todos);
-            cy.pause();
+        before(() => {
+            //clear existing todos from previous test to start with blank slate.
+            // clearAllTodos();
         })
+        it('can add multiple todos', () => {
+            // clearAllTodos();
+            addTodo(todos);
+            // assertNumberOfTodos(todos.length)
+        })
+
+        it('can mark random todo as completed', () => {
+
+        });
+
+        it('can remove random todo', () => {
+
+        });
     })
 })
 
@@ -93,8 +109,8 @@ describe('example to-do app', () => {
     -write page object file in typescript
 */
 
-//adding todos 
-function addTodo(todos){
+//adding single todo or multiple 
+const addTodo = (todos) => {
     if(Array.isArray(todos)){
         for(let i = 0; i < todos.length; i++){
             cy.getDataTag("new-todo").type(`${todos[i]}{enter}`);
@@ -110,15 +126,33 @@ const assertNumberOfTodos = num => {
     cy.get('.todo-list li').should('have.length', num);
 }
 
-//assert todo text
-function assertTodoText(todoText){
+//assert todo text for full list
+const assertTodosText = (todoText) => {
   for(let i = 0; i < todoText.length; i++){
     cy.get('.todo-list li').eq(i).should("have.text", todoText[i])
   }
+}
+
+//assert single todo text
+const assertSingleTodoText = (text, boolean = true, index = 0) => {
+    cy.get('.todo-list li').eq(index).should(boolean ? "have.text" : "not.have.text", text)
 }
 
 //check todo (can be used to check or uncheck todo)
 const clickTodoCheckbox = (todoText, checkboxBool) => {
     cy.contains(todoText).parent().find('input[type=checkbox]').check();
     cy.contains(todoText).parents('li').should(checkboxBool ? 'have.class' : 'not.have.class', 'completed');
+}
+
+const clearAllTodos = () => {
+    cy.get('.todo-list').within(() => {
+        cy.get('li').eq(0).trigger('mouseenter');
+        cy.get('.destroy').click({multiple: true});
+    });
+}
+
+const filterTodos = type => {
+    cy.get('.filters').within(() => {
+        cy.contains(type).click();
+    })
 }
