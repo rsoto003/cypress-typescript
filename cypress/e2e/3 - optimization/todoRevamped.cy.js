@@ -61,7 +61,7 @@ describe('example to-do app', () => {
         })
 
         it('can delete all completed tasks', () => {
-            cy.contains('Clear completed').click()
+            todoPage.clearCompletedTodos();
 
             cy.get('.todo-list li')
                 .should('have.length', 1)
@@ -79,8 +79,9 @@ describe('example to-do app', () => {
         it('can add multiple todos', () => {
             // clearAllTodos();
             todoPage.addTodo(todos);
+            cy.get('.todo-count').should('contain', `${todos.length + 2} items left`)
             // assertNumberOfTodos(todos.length)
-        })
+        });
 
         it('can mark random todo as completed', () => {
 

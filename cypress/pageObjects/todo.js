@@ -1,3 +1,10 @@
+/* locators */
+let locators = {
+    // completedBtn: cy.contains("Clear completed")
+}
+
+/* functions */
+
 //adding single todo or multiple 
 export const addTodo = (todos) => {
     if(Array.isArray(todos)){
@@ -44,4 +51,12 @@ export const filterTodos = type => {
     cy.get('.filters').within(() => {
         cy.contains(type).click();
     })
+}
+
+export const deleteCompletedTasks = () => {
+    locators.completedBtn.click();
+}
+
+export const clearCompletedTodos = () => {
+    cy.get('.clear-completed').click();
 }
