@@ -40,11 +40,14 @@ export const clickTodoCheckbox = (todoText, checkboxBool) => {
     cy.contains(todoText).parents('li').should(checkboxBool ? 'have.class' : 'not.have.class', 'completed');
 }
 
-export const clearAllTodos = () => {
-    cy.get('.todo-list').within(() => {
-        cy.get('li').eq(0).trigger('mouseenter');
-        cy.get('.destroy').click({multiple: true});
-    });
+export const clearAllTodos = (num) => {
+    for(let x = 0; x < num; x++){
+        cy.get('.todo-list').within(() => {
+            cy.get('li').eq(0).within(() => {
+                cy.get('.destroy').invoke('show').click();
+            });
+        });
+    }
 }
 
 export const filterTodos = type => {

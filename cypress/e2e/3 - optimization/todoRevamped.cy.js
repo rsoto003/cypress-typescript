@@ -66,37 +66,14 @@ describe('example to-do app', () => {
     })
 
     context('brand new list of todos', () => {
-        before(() => {
-            //clear existing todos from previous test to start with blank slate.
-            // clearAllTodos();
-        })
         it('can add multiple todos', () => {
-            // clearAllTodos();
+            todoPage.clearAllTodos(2);
             todoPage.addTodo(todos);
-            cy.get('.todo-count').should('contain', `${todos.length + 2} items left`)
-            // assertNumberOfTodos(todos.length)
-        });
+            cy.get('.todo-count').should('contain', `${todos.length} items left`)
+            todoPage.assertNumberOfTodos(todos.length)
+            //mark random todo as completed
 
-        it('can mark random todo as completed', () => {
-
-        });
-
-        it('can remove random todo', () => {
-
+            //remove random todo
         });
     })
 })
-
-
-/* 
-            cypress review plan
-  -create functions to handle code where necessary
-  -create page object file
-    -move functions into page object file
-    -create locators as well
-    -import into main file 
-  
-  -typescript
-    -rewrite spec in typescript
-    -write page object file in typescript
-*/
