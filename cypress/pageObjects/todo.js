@@ -50,6 +50,14 @@ export const clearAllTodos = (num) => {
     }
 }
 
+export const removeTodo = index => {
+            cy.get('.todo-list').within(() => {
+            cy.get('li').eq(index).within(() => {
+                cy.get('.destroy').invoke('show').click();
+            });
+        });
+}
+
 export const filterTodos = type => {
     cy.get('.filters').within(() => {
         cy.contains(type).click();

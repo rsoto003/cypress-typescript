@@ -65,15 +65,27 @@ describe('example to-do app', () => {
         })
     })
 
-    context('brand new list of todos', () => {
-        it('can add multiple todos', () => {
+    context('brand new list of todos - best practices refresher', () => {
+        it('can perform actions on various todos', () => {
             todoPage.clearAllTodos(2);
             todoPage.addTodo(todos);
-            cy.get('.todo-count').should('contain', `${todos.length} items left`)
-            todoPage.assertNumberOfTodos(todos.length)
+            cy.get('.todo-count').should('contain', `${todos.length} items left`);
+            todoPage.assertNumberOfTodos(todos.length);
+
             //mark random todo as completed
+            let todoToComplete = todos[Math.floor(Math.random() * todos.length)];
+            todoPage.clickTodoCheckbox(todoToComplete, true);
+            todoPage.filterTodos('Completed');
+            cy.get('.todo-count').should('contain', `${todos.length - 1} items left`);
 
             //remove random todo
+            todoPage.filterTodos('All');
+            let deletedTodoText = todos[Math.floor(Math.random() * todos.length)];
+            let indexOfDeletedTodo = todos.indexOf(deletedTodoText);
+            
+            todoPage.assertSingleTodoText(deletedTodoText, true, indexOfDeletedTodo);
+            todoPage.removeTodo(indexOfDeletedTodo);
+            todoPage.assertSingleTodoText(deletedTodoText, false, indexOfDeletedTodo);
         });
     })
 })
