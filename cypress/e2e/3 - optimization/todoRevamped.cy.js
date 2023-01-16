@@ -51,21 +51,15 @@ describe('example to-do app', () => {
 
         it('can filter for completed tasks', () => {
             todoPage.filterTodos('Completed');
-
-            cy.get('.todo-list li')
-                .should('have.length', 1)
-                .first()
-                .should('have.text', 'Pay electric bill')
-
-            cy.contains('Walk the dog').should('not.exist')
+            todoPage.assertNumberOfTodos(1);
+            todoPage.assertSingleTodoText('Pay electric bill');
+            todoPage.assertSingleTodoText('Walk the dog', false)
         })
 
         it('can delete all completed tasks', () => {
             todoPage.clearCompletedTodos();
-
-            cy.get('.todo-list li')
-                .should('have.length', 1)
-                .should('not.have.text', 'Pay electric bill')
+            todoPage.assertNumberOfTodos(1);
+            todoPage.assertSingleTodoText('Pay electric bill', false)
 
             cy.contains('Clear completed').should('not.exist')
         })
